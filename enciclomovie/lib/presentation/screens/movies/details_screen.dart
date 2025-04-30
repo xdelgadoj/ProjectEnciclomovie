@@ -95,7 +95,7 @@ class _DetailsView extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          if (message.data!.isNotEmpty) ...message.data!.entries.map(
+          if (message.data.isNotEmpty) ...message.data.entries.map(
             (entry) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
