@@ -15,7 +15,7 @@ class DetailsScreen extends StatelessWidget {
     final bloc = context.watch<NotificationsBloc>();
     final PushMessage? message = bloc.getMessageById(pushMessageId);
 
-    // ✅ Marcar como leída si aún no lo está
+    // Marcar como leída si aún no lo está
     if (message != null && !message.isRead) {
       context.read<NotificationsBloc>().add(MarkNotificationAsRead(message.messageId));
     }
