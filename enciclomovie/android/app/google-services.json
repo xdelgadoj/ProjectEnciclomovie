@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1017626603329",
+    "project_id": "enciclomovie",
+    "storage_bucket": "enciclomovie.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017626603329:android:1cdb463807680677ac3bc0",
+        "android_client_info": {
+          "package_name": "com.example.enciclomovie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEOcx6i6b81Ss0x1Emrif41Us1bKaPC3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
