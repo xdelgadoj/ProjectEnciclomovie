@@ -13,12 +13,12 @@ Future<void> main() async {
 
   await dotenv.load(fileName: '.env');
 
-  await NotificationsBloc.initializeFCM();
+  await NotificationsBloc.initializeFCM();  
 
   // Configurar blocs
   final blocProviders = [
     BlocProvider(create: (_) => NotificationsBloc()),    
-  ];
+  ];  
 
   runApp(
     ProviderScope(
@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return MaterialApp.router(
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,

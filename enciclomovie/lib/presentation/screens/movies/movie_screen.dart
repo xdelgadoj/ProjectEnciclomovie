@@ -1,3 +1,4 @@
+import 'package:enciclomovie/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
@@ -95,6 +96,18 @@ class _MovieDetails extends StatelessWidget {
                   children: [
                     Text( movie.title, style: textStyles.titleLarge ),
                     Text( movie.overview ),
+                    
+                    const SizedBox(height: 10 ),
+                
+                    MovieRating(voteAverage: movie.voteAverage ),
+
+                    Row(
+                      children: [
+                        const Text('Estreno:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 5 ),
+                        Text(movie.releaseDate.toString().split(' ').first)
+                      ],
+                    )
                   ],
                 ),
               )
@@ -119,7 +132,14 @@ class _MovieDetails extends StatelessWidget {
           ),
         ),
 
+        //* Actores de la película
         _ActorsByMovie(movieId: movie.id.toString() ),
+
+        //* Videos de la película (si tiene)
+        VideosFromMovie( movieId: movie.id ),
+
+        //* Películas similares
+        SimilarMovies(movieId: movie.id ),
 
         const SizedBox(height: 50 ),
       ],
@@ -162,12 +182,15 @@ class _ActorsByMovie extends ConsumerWidget {
                 FadeInRight(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      actor.profilePath,
+                    child: FadeInImage(
                       height: 180,
                       width: 135,
                       fit: BoxFit.cover,
-                    ),
+                      placeholder: const AssetImage('assets/loaders/bottle-loader.gif'),
+                      image: NetworkImage(
+                        actor.profilePath,
+                      ),
+                    )
                   ),
                 ),
 
@@ -208,8 +231,8 @@ class _CustomSliverAppBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
-
     final size = MediaQuery.of(context).size;
+    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
     return SliverAppBar(
       backgroundColor: Colors.black,
@@ -234,8 +257,17 @@ class _CustomSliverAppBar extends ConsumerWidget {
           
         )
       ],
-      flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      flexibleSpace: FlexibleSpaceBar(                
+        titlePadding: const EdgeInsets.only(bottom: 0),
+        title:  _CustomGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: const [0.7, 1.0],
+          colors: [
+            Colors.transparent,
+            scaffoldBackgroundColor
+          ]
+        ),
         background: Stack(
           children: [
 
