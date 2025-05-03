@@ -11,12 +11,15 @@ dependencies:
   card_swiper: ^3.0.1
   dio: ^5.8.0+1
   equatable: ^2.0.7
+  firebase_auth: ^5.5.3
   firebase_core: ^3.13.0
   firebase_messaging: ^15.2.5
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.0
   flutter_dotenv: ^5.2.1
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.6
   flutter_riverpod: ^2.6.1
   flutter_staggered_grid_view: ^0.7.0
   go_router: ^14.8.1
@@ -39,3 +42,19 @@ flutter:
   assets:
     - .env
     - assets/loaders/
+    - assets/splash/
+    - assets/icon/
+
+flutter_native_splash:
+  color: "#000000"
+  image: assets/splash/launch_image.png
+  android: true
+  ios: true
+  web: false
+  android_gravity: fill
+  ios_content_mode: scaleToFill
+
+flutter_launcher_icons:
+  image_path: assets/icon/app_icon.png
+  android: true
+  ios: true

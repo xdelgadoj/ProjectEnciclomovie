@@ -1,5 +1,4 @@
 
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:enciclomovie/domain/entities/movie.dart';
