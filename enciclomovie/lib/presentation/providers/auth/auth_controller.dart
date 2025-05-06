@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:enciclomovie/domain/services/sign_in_with_email_service.dart';
 import 'package:enciclomovie/domain/services/register_with_email_service.dart';
+import 'package:enciclomovie/domain/services/reset_password_service.dart';
 import 'auth_provider.dart';
 
 enum AuthStatus { initial, loading, success, error }
@@ -8,10 +9,12 @@ enum AuthStatus { initial, loading, success, error }
 class AuthController extends StateNotifier<AuthStatus> {
   final SignInWithEmailService signInService;
   final RegisterWithEmailService registerService;
+  final ResetPasswordService resetPasswordService;
 
   AuthController({
     required this.signInService,
     required this.registerService,
+    required this.resetPasswordService,
   }) : super(AuthStatus.initial);
 
   String? errorMessage;
@@ -38,6 +41,18 @@ class AuthController extends StateNotifier<AuthStatus> {
     }
   }
 
+  Future<void> sendPasswordReset(String email) async {
+    state = AuthStatus.loading;
+    try {
+      await resetPasswordService.execute(email);
+      state = AuthStatus.success;
+    } catch (e) {
+      errorMessage = e.toString();
+      state = AuthStatus.error;
+      rethrow;
+    }
+  }
+
   Future<void> signOut() async {
     state = AuthStatus.loading;
     try {
@@ -59,9 +74,11 @@ final authControllerProvider =
     StateNotifierProvider<AuthController, AuthStatus>((ref) {
   final signIn = ref.watch(signInWithEmailProvider);
   final register = ref.watch(registerWithEmailProvider);
+  final reset = ref.watch(resetPasswordProvider);
 
   return AuthController(
     signInService: signIn,
     registerService: register,
+    resetPasswordService: reset,
   );
 });

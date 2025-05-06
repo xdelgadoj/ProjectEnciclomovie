@@ -31,6 +31,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
       curve: Curves.easeIn,
     );
     _controller.forward();
+
+    Future.microtask(() {
+      if (mounted) {
+        ref.read(authControllerProvider.notifier).reset();
+      }
+    });
   }
 
   @override
@@ -44,15 +50,70 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
   Future<void> handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    await ref.read(authControllerProvider.notifier).signIn(
-          emailController.text.trim(),
-          passwordController.text.trim(),
-        );
+    final controller = ref.read(authControllerProvider.notifier);
+    await controller.signIn(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+    );
 
     final status = ref.read(authControllerProvider);
     if (status == AuthStatus.success && mounted) {
       context.go('/home/0');
     }
+  }
+
+  void _showResetPasswordDialog() {
+    final resetEmailController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Recuperar contraseña'),
+          content: TextField(
+            controller: resetEmailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              labelText: 'Correo electrónico',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final email = resetEmailController.text.trim();
+                if (email.isEmpty || !email.contains('@')) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Correo no válido')),
+                    );
+                  }
+                  return;
+                }
+
+                final messenger = ScaffoldMessenger.of(context);
+                Navigator.pop(context);
+
+                try {
+                  await ref.read(authControllerProvider.notifier).sendPasswordReset(email);
+                  messenger.showSnackBar(
+                    const SnackBar(content: Text('Enlace de recuperación enviado')),
+                  );
+                } catch (_) {
+                  final error = ref.read(authControllerProvider.notifier).errorMessage ?? 'Error inesperado';
+                  messenger.showSnackBar(
+                    SnackBar(content: Text(error)),
+                  );
+                }
+              },
+              child: const Text('Enviar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -143,6 +204,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                               : const Text('Iniciar sesión', style: TextStyle(fontSize: 16, color: Colors.white)),
                         ),
                         const SizedBox(height: 12),
+                        TextButton(
+                          onPressed: _showResetPasswordDialog,
+                          child: const Text(
+                            '¿Olvidaste tu contraseña?',
+                            style: TextStyle(color: Colors.black87),
+                          ),
+                        ),
                         TextButton(
                           onPressed: () => context.push('/register'),
                           child: const Text(

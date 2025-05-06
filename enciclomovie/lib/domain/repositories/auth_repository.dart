@@ -3,4 +3,5 @@ abstract class AuthRepository {
   Future<void> registerWithEmail({required String email, required String password});
   Future<void> signOut();
   Stream<bool> get authStateChanges;
+  Future<void> sendPasswordReset(String email);
 }

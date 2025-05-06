@@ -23,4 +23,9 @@ class FirebaseAuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<bool> get authStateChanges => _firebaseAuth.authStateChanges().map((user) => user != null);
+
+  @override
+  Future<void> sendPasswordReset(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
 }

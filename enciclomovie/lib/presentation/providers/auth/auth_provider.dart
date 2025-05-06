@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:enciclomovie/domain/repositories/auth_repository.dart';
 import 'package:enciclomovie/domain/services/register_with_email_service.dart';
 import 'package:enciclomovie/domain/services/sign_in_with_email_service.dart';
+import 'package:enciclomovie/domain/services/reset_password_service.dart';
 import 'package:enciclomovie/infrastructure/repositories/firebase_auth_repository_impl.dart';
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
@@ -25,4 +26,9 @@ final registerWithEmailProvider = Provider<RegisterWithEmailService>((ref) {
 final authStateProvider = StreamProvider<bool>((ref) {
   final repository = ref.watch(authRepositoryProvider);
   return repository.authStateChanges;
+});
+
+final resetPasswordProvider = Provider<ResetPasswordService>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return ResetPasswordService(repository);
 });
